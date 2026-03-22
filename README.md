@@ -8,4 +8,5 @@
  - [ ] visibility management
  - [ ] animated gifs
  - [ ] cache downloads
+ - [ ] better trigger and add particles
  - [ ] alle dependencies statt shade -> dependency loader
