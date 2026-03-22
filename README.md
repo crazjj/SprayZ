@@ -1,0 +1,11 @@
+# TODO
+ - [x] bttv api zum laufen bekommen
+ - [x] maven -> gradle kts
+ - [x] alles kotlin recoden
+ - [x] alles integrieren
+ - [x] ~~ugly command shit~~ -> nbt lib
+ - [ ] packet only
+ - [ ] visibility management
+ - [ ] animated gifs
+ - [ ] cache downloads
+ - [ ] alle dependencies statt shade -> dependency loader
