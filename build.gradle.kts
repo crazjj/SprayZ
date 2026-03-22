@@ -29,11 +29,11 @@ repositories {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(24))
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(24)
 }
 
 dependencies {
@@ -45,11 +45,11 @@ dependencies {
     implementation(libs.ktor.client.cio)
 }
 
-group = "de.crazyjannis44"
+group = "de.crazj_"
 version = "1.0-SNAPSHOT"
 description = "SprayZ"
 java.sourceCompatibility = JavaVersion.VERSION_25
-java.targetCompatibility = JavaVersion.VERSION_21
+java.targetCompatibility = JavaVersion.VERSION_24
 
 
 
