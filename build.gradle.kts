@@ -7,27 +7,6 @@ plugins {
 
 version = "1.0"
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-    exclusiveContent {
-        forRepository { maven("https://repo.papermc.io/repository/maven-public/") }
-        filter {
-            includeGroup("io.papermc.paper")
-            includeGroup("net.kyori")
-            includeGroup("net.md-5")
-        }
-    }
-    exclusiveContent {
-        forRepository {
-            maven("https://repo.codemc.io/repository/maven-public/")
-        }
-        filter {
-            includeGroup("de.tr7zw")
-        }
-    }
-}
-
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(24))
 }
@@ -43,9 +22,12 @@ dependencies {
     compileOnly(libs.paper.api)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
+    implementation(libs.packetevents.spigot)
+    api(libs.entitylib.api)
+    implementation(libs.entitylib.spigot)
 }
 
-group = "de.crazj_"
+group = "de.crazj"
 version = "1.0-SNAPSHOT"
 description = "SprayZ"
 java.sourceCompatibility = JavaVersion.VERSION_25
@@ -71,6 +53,15 @@ tasks.named("build") {
 
 tasks.named<ShadowJar>("shadowJar") {
     relocate("de.tr7zw.changeme.nbtapi", "de.crazj.sprayz.libs.nbt_api")
+    relocate("io.github.retrooper", "de.crazj.sprayz.libs.packetevents.spigot")
+    relocate("com.github.retrooper", "de.crazj.sprayz.libs.packetevents.api")
+    relocate("me.tofaa.entitylib", "de.crazj.sprayz.libs.entitylib")
+//    relocate("net.kyori", "de.crazj.sprayz.libs.kyori")
+    relocate("net.axay.kspigot", "de.crazj.sprayz.libs.kspigot")
+//    relocate("com.google.gson", "de.crazj.sprayz.libs.gson")
+    relocate("io.ktor", "de.crazj.sprayz.libs.ktor")
+
+    minimize()
 
     archiveBaseName.set(rootProject.name)
     archiveClassifier.set("")

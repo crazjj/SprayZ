@@ -7,6 +7,7 @@ minecraftGen = "1.21"
 org-jetbrains-kotlin-kotlin-stdlib = "1.9.23"
 paper = "1.21.11-R0.1-SNAPSHOT"
 ktor = "3.4.0"
+entitylib = "3.1.0-SNAPSHOT"
 
 [libraries]
 kspigot = { module = "net.axay:kspigot", version.ref = "net-axay-kspigot" }
@@ -15,3 +16,6 @@ paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 nbt-api = { module = "de.tr7zw:item-nbt-api", version = "2.15.5" }
+packetevents-spigot = { module = "com.github.retrooper:packetevents-spigot", version = "2.11.2" }
+entitylib-spigot = { module = "io.github.tofaa2:spigot", version.ref = "entitylib" }
+entitylib-api = { module = "io.github.tofaa2:api", version.ref = "entitylib" }

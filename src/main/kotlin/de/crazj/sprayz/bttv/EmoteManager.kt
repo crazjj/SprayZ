@@ -16,18 +16,23 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.MapMeta
+import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
 class EmoteManager {
-    private var fileEmotes = LinkedHashMap<File, ImageRenderer>()
+    private var fileEmotes = LinkedHashMap<File, Image>()
     val bttvEmotes: HashSet<Emote> = HashSet()
 
-    fun getAllEmotes(): MutableMap<String, ImageRenderer> {
-        val list = mutableMapOf<String, ImageRenderer>()
-        bttvEmotes.forEach { emote -> list[emote.code] = emote.imageRenderer }
-        fileEmotes.forEach { (file, renderer) -> list[file.nameWithoutExtension] = renderer }
+    fun getAllEmotes(): MutableMap<String, Image> {
+        val list = mutableMapOf<String, Image>()
+        bttvEmotes.forEach { emote ->
+            list[emote.code] = emote.image!!
+        }
+        fileEmotes.forEach { (file, renderer) ->
+            list[file.nameWithoutExtension] = renderer
+        }
         return list
     }
 
@@ -47,24 +52,28 @@ class EmoteManager {
         fileEmotes.clear()
         for (file in folder.listFiles()!!) {
             val image = ImageIO.read(file).getScaledInstance(
-                128, 128,
-                BufferedImage.SCALE_SMOOTH
+                128, 128, BufferedImage.SCALE_SMOOTH
             )
-            val renderer = ImageRenderer(image)
-            fileEmotes[file] = renderer
+            fileEmotes[file] = image
         }
     }
 
 
-    fun map(player: Player,name:String, emote: ImageRenderer): ItemStack {
-        val mapView = Bukkit.createMap(player.world)
-        for (renderer in mapView.renderers) mapView.removeRenderer(renderer)
-        mapView.addRenderer(emote)
+    fun map(name: String): ItemStack {
         val map = ItemStack(Material.FILLED_MAP)
         val meta = (map.itemMeta as MapMeta)
         meta.itemName(Component.text(name))
-        meta.mapView = mapView
         map.setItemMeta(meta)
         return map
+    }
+
+    fun setMapContent(player: Player, item: ItemStack, imageRenderer: ImageRenderer) {
+        item.editMeta {
+            val mapView = Bukkit.createMap(player.world)
+            for (renderer in mapView.renderers) mapView.removeRenderer(renderer)
+            mapView.addRenderer(imageRenderer)
+            (it as MapMeta).mapView = mapView
+        }
+
     }
 }

@@ -3,13 +3,13 @@ package de.crazj.sprayz.bttv
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import de.crazj.sprayz.SprayZ
-import de.crazj.sprayz.spray.ImageRenderer
 import io.ktor.client.*
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import org.bukkit.ChatColor
 import org.bukkit.map.MapPalette
-import java.awt.image.BufferedImage
+import java.awt.Image
 import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URI
@@ -78,7 +78,7 @@ class BTTVAPI {
 
 
         suspend fun getRequest(url: URL): JsonElement {
-            val response = HttpClient().get(url)
+            val response = HttpClient(CIO).get(url)
             if (response.status.value != 200) {
                 SprayZ.instance.log(
                     ChatColor.RED.toString() + "ERROR while getting emotes from url: " + url.toString()
@@ -92,10 +92,10 @@ class BTTVAPI {
 
         class Emote(val id: String, val code: String, val animated: Boolean, val userID: String?) {
 
-            val imageRenderer: ImageRenderer
+            val image: Image?
 
             init {
-                var image: BufferedImage? = null
+                var image: Image? = null
                 try {
                     image = ImageIO.read(URL(EMOTE_3X.replace("<EMOTE_ID>", id)))
                     image = MapPalette.resizeImage(image)
@@ -107,7 +107,7 @@ class BTTVAPI {
                     )
                     e.printStackTrace()
                 } finally {
-                    this.imageRenderer = ImageRenderer(image!!)
+                    this.image = image!!
                 }
             }
         }

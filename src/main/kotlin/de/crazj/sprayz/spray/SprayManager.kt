@@ -49,7 +49,7 @@ class SprayManager {
         val emotes = SprayZ.instance.emoteManager.getAllEmotes()
         val i = ThreadLocalRandom.current().nextInt(emotes.size)
         val mapView: MapView = Bukkit.createMap(event.player.world)
-        mapView.addRenderer(emotes.values.elementAt(i))
+        mapView.addRenderer(ImageRenderer(emotes.values.elementAt(i)))
 
         val map = ItemStack(Material.FILLED_MAP)
         val meta = (map.itemMeta as MapMeta)

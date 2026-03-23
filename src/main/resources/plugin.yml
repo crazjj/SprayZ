@@ -1,0 +1,20 @@
+name: ${pluginName}
+version: ${version}
+main: de.crazj.sprayz.SprayZ
+api-version: ${minecraftGen}
+author: crazj_
+description: A plugin that adds sprays like in other games
+
+softdepend:
+  # Cuz packet events inject order
+  - ProtocolLib
+  - ProtocolSupport
+  - ViaVersion
+  - ViaBackwards
+  - ViaRewind
+  - Geyser-Spigot
+
+permissions:
+  sprayz.use:
+    description: Allows you to use the SprayZ plugin
+    default: op

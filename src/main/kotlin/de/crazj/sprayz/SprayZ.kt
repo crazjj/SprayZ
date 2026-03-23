@@ -1,10 +1,15 @@
 package de.crazj.sprayz
 
+import com.github.retrooper.packetevents.PacketEvents
 import de.crazj.sprayz.bttv.EmoteManager
 import de.crazj.sprayz.cmd.SprayZCommand
 import de.crazj.sprayz.spray.SprayManager
 import de.tr7zw.changeme.nbtapi.NBT
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
+import me.tofaa.entitylib.APIConfig
+import me.tofaa.entitylib.EntityLib
+import me.tofaa.entitylib.spigot.SpigotEntityLibPlatform
 import net.axay.kspigot.event.unregister
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
@@ -26,6 +31,10 @@ class SprayZ : KSpigot() {
     override fun load() {
         instance = this
         log("SprayZ loaded")
+
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this))
+        PacketEvents.getAPI().load()
+
         sprayManager = SprayManager()
     }
 
@@ -38,6 +47,15 @@ class SprayZ : KSpigot() {
             pluginManager.disablePlugin(this);
             return;
         }
+
+        PacketEvents.getAPI().init()
+        EntityLib.init(
+            SpigotEntityLibPlatform(this),
+            APIConfig(PacketEvents.getAPI())
+                .forceBundles()
+                .tickTickables()
+                .usePlatformLogger()
+        )
 
         emoteManager = EmoteManager()
         Bukkit.getPluginManager().registerEvents(sprayManager.listener, this)
@@ -58,6 +76,8 @@ class SprayZ : KSpigot() {
         log("SprayZ shutting down...")
         sprayManager.listener.unregister()
         sprayManager.sprays.forEach { it.remove() }
+
+        PacketEvents.getAPI()?.terminate()
     }
 
 }
