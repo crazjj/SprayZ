@@ -2,9 +2,8 @@ package de.crazj.sprayz.bttv
 
 import de.crazj.sprayz.ConfPath
 import de.crazj.sprayz.SprayZ
-import de.crazj.sprayz.bttv.BTTVAPI.Companion.Emote
-import de.crazj.sprayz.bttv.BTTVAPI.Companion.getChannelEmotes
-import de.crazj.sprayz.bttv.BTTVAPI.Companion.getGlobalEmotes
+import de.crazj.sprayz.bttv.BTTVAPI.getChannelEmotes
+import de.crazj.sprayz.bttv.BTTVAPI.getGlobalEmotes
 import de.crazj.sprayz.spray.ImageRenderer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +22,7 @@ import javax.imageio.ImageIO
 
 class EmoteManager {
     private var fileEmotes = LinkedHashMap<File, Image>()
-    val bttvEmotes: HashSet<Emote> = HashSet()
+    val bttvEmotes: HashSet<BTTVAPI.Emote> = HashSet()
 
     fun getAllEmotes(): MutableMap<String, Image> {
         val list = mutableMapOf<String, Image>()
