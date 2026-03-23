@@ -4,9 +4,9 @@
  - [x] alles kotlin recoden
  - [x] alles integrieren
  - [x] ~~ugly command shit~~ -> nbt lib
- - [ ] packet only
+ - [x] packet only
  - [ ] visibility management
  - [ ] animated gifs
  - [ ] cache downloads
  - [ ] better trigger and add particles
- - [ ] alle dependencies statt shade -> dependency loader
+ - [ ] alle dependencies statt shade -> dependency loader?
