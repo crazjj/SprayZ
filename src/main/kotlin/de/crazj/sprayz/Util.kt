@@ -61,15 +61,7 @@ object Util {
             return WrapperEntity(EntityTypes.ITEM_FRAME).apply {
                 consumeEntityMeta(ItemFrameMeta::class.java) {
                     it.isInvisible = true
-                    it.orientation = when (facingDirection) {
-                        BlockFace.UP -> ItemFrameMeta.Orientation.UP
-                        BlockFace.DOWN -> ItemFrameMeta.Orientation.DOWN
-                        BlockFace.NORTH -> ItemFrameMeta.Orientation.NORTH
-                        BlockFace.EAST -> ItemFrameMeta.Orientation.EAST
-                        BlockFace.SOUTH -> ItemFrameMeta.Orientation.SOUTH
-                        BlockFace.WEST -> ItemFrameMeta.Orientation.WEST
-                        else -> throw IllegalArgumentException("Facing direction must be one of the cardinal directions")
-                    }
+                    it.orientation = facingDirection.toPacketItemFrameOrientation()
                     it.isCustomNameVisible = true
                     it.customName = Component.text(name).color(NamedTextColor.DARK_PURPLE)
 
@@ -95,13 +87,23 @@ object Util {
                             }
                         )
                 }
-                addViewer(player.uniqueId)
+//                addViewer(player.uniqueId)
                 spawn(SpigotConversionUtil.fromBukkitLocation(loc))
             }
 
         }
 
 
+    }
+
+    fun BlockFace.toPacketItemFrameOrientation(): ItemFrameMeta.Orientation = when (this) {
+        BlockFace.UP -> ItemFrameMeta.Orientation.UP
+        BlockFace.DOWN -> ItemFrameMeta.Orientation.DOWN
+        BlockFace.NORTH -> ItemFrameMeta.Orientation.NORTH
+        BlockFace.EAST -> ItemFrameMeta.Orientation.EAST
+        BlockFace.SOUTH -> ItemFrameMeta.Orientation.SOUTH
+        BlockFace.WEST -> ItemFrameMeta.Orientation.WEST
+        else -> throw IllegalArgumentException("Facing direction must be one of the cardinal directions")
     }
 
     object ImageUtil {

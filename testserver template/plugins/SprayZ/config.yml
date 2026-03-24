@@ -1,9 +1,8 @@
 spray:
-  disappear-after: 5
-  spray-cooldown: 0
-  rotatable: true
+  disappear-after: -1
+  cooldown: -1
+  range: 8.0
 bttv:
-  global-bttvEmotes: false
-  global-emotes: false
+  global-emotes-enabled: true
   emote-channels:
   - '38121996'
