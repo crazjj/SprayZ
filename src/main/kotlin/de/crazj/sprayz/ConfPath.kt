@@ -2,11 +2,10 @@ package de.crazj.sprayz
 
 enum class ConfPath(sub: String, val defaultValue: Any?, parent: ConfPath?) {
     SPRAY("spray", null, null),
-    DISAPPEAR_AFTER("disappear-after", 5, SPRAY),
-    SPRAY_COOLDOWN("spray-cooldown", 20, SPRAY),
-    SPRAY_ROTATABLE("rotatable", true, SPRAY),
+    DISAPPEAR_AFTER("disappear-after", 3, SPRAY),
+    SPRAY_COOLDOWN("spray-cooldown", 5, SPRAY),
     BTTV("bttv", null, null),
-    BTTV_GLOBAL("global-bttvEmotes", true, BTTV),
+    BTTV_GLOBAL("global-emotes-enabled", true, BTTV),
     BTTV_CHANNELS("emote-channels", listOf("38121996"), BTTV),
     ;
 

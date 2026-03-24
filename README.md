@@ -5,8 +5,8 @@
  - [x] alles integrieren
  - [x] ~~ugly command shit~~ -> nbt lib
  - [x] packet only
+ - [x] animated gifs
  - [ ] visibility management
- - [ ] animated gifs
  - [ ] cache downloads
  - [ ] better trigger and add particles
  - [ ] alle dependencies statt shade -> dependency loader?

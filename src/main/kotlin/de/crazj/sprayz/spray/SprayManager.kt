@@ -4,14 +4,11 @@ import de.crazj.sprayz.ConfPath
 import de.crazj.sprayz.Permission
 import de.crazj.sprayz.SprayZ
 import de.crazj.sprayz.Util
-import de.tr7zw.changeme.nbtapi.NBT
-import me.tofaa.entitylib.meta.other.ItemFrameMeta
+import de.crazj.sprayz.Util.ImageUtil
+import de.crazj.sprayz.Util.PacketUtil.sendMapData
 import me.tofaa.entitylib.wrapper.WrapperEntity
 import net.axay.kspigot.runnables.taskRunLater
-import net.kyori.adventure.text.Component
-import org.bukkit.ChatColor
-import org.bukkit.block.BlockFace
-import org.bukkit.entity.ItemFrame
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
@@ -42,25 +39,59 @@ class SprayManager {
     }
 
     private fun spray(event: PlayerInteractEvent) {
-        // Create a map with an image
-        val emote = SprayZ.instance.emoteManager.getAllEmotes().entries.random()
+        val emotes = SprayZ.instance.emoteManager.getAllEmotes()
+        if (emotes.isEmpty()) return
+        val entry = emotes.entries.random()
 
-        val itemFrame = Util.PacketUtil
-            .sendMapItemFrame(
-                event.player,
-                event.clickedBlock!!.getRelative(event.blockFace).location,
-                emote.key,
-                emote.value,
-                Util.relativelySafeMapID(),
-                event.blockFace
-            )
-
+        val mapId = Util.relativelySafeMapID()
+        val itemFrame = Util.PacketUtil.sendMapItemFrame(
+            event.player,
+            event.clickedBlock!!.getRelative(event.blockFace).location,
+            entry.key,
+            mapId,
+            event.blockFace
+        )
         sprays.add(itemFrame)
 
-        taskRunLater(SprayZ.instance.config.getLong(ConfPath.DISAPPEAR_AFTER.path) * 20, true) {
-            sprays.remove(itemFrame)
-            itemFrame.remove()
+        val emote = entry.value
+        if (emote is StaticEmote) {
+            sendMapData(event.player, mapId, ImageUtil.toMapBytes(emote.image))
+        } else if (emote is GifEmote) {
+            playGifSpray(event.player, itemFrame, mapId, emote)
         }
+
+        val disappear = SprayZ.instance.config.getLong(ConfPath.DISAPPEAR_AFTER.path)
+        if (disappear > 0)
+            taskRunLater(disappear * 20, true) {
+                sprays.remove(itemFrame)
+                itemFrame.despawn()
+            }
+    }
+
+    private fun playGifSpray(player: Player, itemFrame: WrapperEntity, mapId: Int, emote: GifEmote) {
+        if (emote.frames.isEmpty()) return
+        if (!sprays.contains(itemFrame)) return
+
+        var frameIndex = 0
+
+        fun scheduleNextFrame() {
+            if (!sprays.contains(itemFrame)) return
+
+            val nextImage = emote.byteFrames[frameIndex]
+            val delayMs = emote.delays.getOrNull(frameIndex) ?: 100
+            val delayTicks = maxOf(1L, delayMs / 50L)
+            sendMapData(
+                player, mapId, nextImage
+            )
+
+            frameIndex = (frameIndex + 1) % emote.frames.size
+
+            taskRunLater(delayTicks, true) {
+                scheduleNextFrame()
+            }
+        }
+
+        scheduleNextFrame()
     }
 
 }
