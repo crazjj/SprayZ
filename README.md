@@ -6,7 +6,5 @@
  - [x] ~~ugly command shit~~ -> nbt lib
  - [x] packet only
  - [x] animated gifs
- - [ ] visibility management
- - [ ] cache downloads
- - [ ] better trigger and add particles
- - [ ] alle dependencies statt shade -> dependency loader?
+ - [x] visibility "management"
+ - [x] better trigger and add particles

@@ -1,8 +1,8 @@
 package de.crazj.sprayz
 
 import com.github.retrooper.packetevents.PacketEvents
-import de.crazj.sprayz.spray.EmoteManager
 import de.crazj.sprayz.cmd.SprayZCommand
+import de.crazj.sprayz.spray.EmoteManager
 import de.crazj.sprayz.spray.SprayManager
 import de.tr7zw.changeme.nbtapi.NBT
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
@@ -62,6 +62,7 @@ class SprayZ : KSpigot() {
             SpigotEntityLibPlatform(this),
             APIConfig(PacketEvents.getAPI())
                 .forceBundles()
+                .checkForUpdates()
 //                .tickTickables()
                 .usePlatformLogger()
         )
