@@ -1,10 +1,15 @@
 # TODO
- - [x] bttv api zum laufen bekommen
+ - [x] get the bttv api working
  - [x] maven -> gradle kts
- - [x] alles kotlin recoden
- - [x] alles integrieren
- - [x] ~~ugly command shit~~ -> nbt lib
+ - [x] rewrite everything in kotlin
+ - [x] integrate everything
+ - [x] ~~ugly command code~~ -> nbt lib
  - [x] packet only
  - [x] animated gifs
  - [x] visibility "management"
  - [x] better trigger and add particles
+ - [x] cache api
+ - [x] messages and bugfixing
+ - [x] mapItem persistence
+ - [x] extensive admin commands
+ - [ ] github release

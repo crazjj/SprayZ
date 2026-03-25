@@ -1,8 +1,12 @@
-spray:
-  disappear-after: -1
-  cooldown: -1
-  range: 8.0
-bttv:
-  global-emotes-enabled: true
-  emote-channels:
-  - '38121996'
+spray: # Top-level settings for spray placement, range, and lifetime.
+  disappear-after: 60 # Time in seconds before a spray disappears. Use -1 to keep sprays forever.
+  cooldown: 1 # Time in seconds before a player can place the next spray. Use -1 to disable the cooldown.
+  range: 128.0 # Maximum spray placement range in blocks for ray tracing.
+bttv: # Top-level settings for BTTV channel loading, refresh behavior, and caches.
+  emote-cache-days: # Cache durations in days for BTTV metadata and downloaded image files.
+    ids: 1 # How many days active BTTV emote ID lists should stay cached before refreshing.
+    images: 7 # How many days downloaded BTTV emote image files should stay fresh before re-downloading.
+  channel-id-cache-days: 30 # How many days resolved Twitch channel IDs from DecAPI should stay cached locally.
+  global-emotes-enabled: false # Whether BTTV global emotes should be loaded.
+  emote-channels: # Configured BTTV channels. Twitch login names are preferred, but numeric Twitch user IDs still work.
+    - bastighg

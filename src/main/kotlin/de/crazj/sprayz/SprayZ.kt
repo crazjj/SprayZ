@@ -2,6 +2,7 @@ package de.crazj.sprayz
 
 import com.github.retrooper.packetevents.PacketEvents
 import de.crazj.sprayz.cmd.SprayZCommand
+import de.crazj.sprayz.map.MapItemService
 import de.crazj.sprayz.spray.EmoteManager
 import de.crazj.sprayz.spray.SprayManager
 import de.tr7zw.changeme.nbtapi.NBT
@@ -17,7 +18,6 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 
-
 class SprayZ : KSpigot() {
 
     companion object {
@@ -29,6 +29,8 @@ class SprayZ : KSpigot() {
     lateinit var sprayManager: SprayManager
 
     lateinit var emoteManager: EmoteManager
+
+    lateinit var mapItemService: MapItemService
 
     fun log(message: String) {
         Bukkit.getConsoleSender().sendMessage(PREFIX.append(Component.text(message, NamedTextColor.WHITE)))
@@ -46,15 +48,15 @@ class SprayZ : KSpigot() {
 
     override fun startup() {
         log("Starting up...")
-        initializeConfig()
+        SprayConfig.initialize()
 
         Bukkit.getPluginManager()
             .addPermissions(Permission.entries.map { org.bukkit.permissions.Permission(it.full, it.permissionDefault) })
 
         if (!NBT.preloadApi()) {
-            logger.warning("NBT-API wasn't initialized properly, disabling the plugin");
-            pluginManager.disablePlugin(this);
-            return;
+            logger.warning("NBT-API wasn't initialized properly, disabling the plugin")
+            pluginManager.disablePlugin(this)
+            return
         }
 
         PacketEvents.getAPI().init()
@@ -62,32 +64,30 @@ class SprayZ : KSpigot() {
             SpigotEntityLibPlatform(this),
             APIConfig(PacketEvents.getAPI())
                 .forceBundles()
-                .checkForUpdates()
-//                .tickTickables()
+//                .checkForUpdates()
                 .usePlatformLogger()
         )
 
         emoteManager = EmoteManager()
+        mapItemService = MapItemService()
         Bukkit.getPluginManager().registerEvents(sprayManager.listener, this)
+        Bukkit.getPluginManager().registerEvents(mapItemService.listener, this)
         lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { commands ->
             commands.registrar().register(SprayZCommand().commandNode)
         }
     }
 
-    private fun initializeConfig() {
-        log("Initialising config...")
-        config.options().copyDefaults(true)
-        for (configPath in ConfPath.entries)
-            config.addDefault(configPath.path, configPath.defaultValue)
-        saveConfig()
-    }
-
     override fun shutdown() {
         log("Shutting down...")
         sprayManager.listener.unregister()
-        sprayManager.sprays.forEach { it.remove() }
+        sprayManager.clearAll()
+        if (::mapItemService.isInitialized) {
+            mapItemService.shutdown()
+        }
+        if (::emoteManager.isInitialized) {
+            emoteManager.shutdown()
+        }
 
         PacketEvents.getAPI()?.terminate()
     }
-
 }

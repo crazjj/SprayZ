@@ -5,8 +5,11 @@ import org.bukkit.permissions.PermissionDefault
 enum class Permission(sub: String, val permissionDefault: PermissionDefault, parent: Permission?) {
     SPRAYZ("sprayz", PermissionDefault.OP, null),
     SPRAYZ_USE("use", PermissionDefault.TRUE, SPRAYZ),
-    SPRAYZ_COMMAND_MAP("command.map", PermissionDefault.OP, SPRAYZ),
-    REFRESH("refresh", PermissionDefault.OP, SPRAYZ), ;
+    SPRAYZ_TOGGLE_OTHERS("toggle.others", PermissionDefault.OP, SPRAYZ),
+    SPRAYZ_MAP_ITEM("map-item", PermissionDefault.OP, SPRAYZ),
+    REFRESH("refresh", PermissionDefault.OP, SPRAYZ),
+    CONFIG("config", PermissionDefault.OP, SPRAYZ),
+    ;
 
     var full: String
 

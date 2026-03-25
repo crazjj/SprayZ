@@ -1,11 +1,16 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
+    id("com.autonomousapps.dependency-analysis") version "3.5.1"
     id("com.gradleup.shadow") version "9.4.0"
     kotlin("jvm") version "2.2.0"
 }
 
-version = "1.0"
+val shade by configurations.creating
+
+configurations.named("implementation") {
+    extendsFrom(shade)
+}
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(24))
@@ -16,24 +21,30 @@ kotlin {
 }
 
 dependencies {
-    api(libs.kotlin.std)
-    implementation(libs.kspigot)
-    implementation(libs.nbt.api)
     compileOnly(libs.paper.api)
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
-    implementation(libs.packetevents.spigot)
-    api(libs.entitylib.api)
-    implementation(libs.entitylib.spigot)
+
+    compileOnly(libs.adventure.api)
+    shade(libs.adventure.key)
+    shade(libs.adventure.nbt)
+    shade(libs.examination.api)
+    shade(libs.examination.string)
+    shade(libs.kspigot)
+    shade(libs.nbt.api)
+    shade(libs.ktor.client.cio) {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+        exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-slf4j")
+    }
+    shade(libs.packetevents.spigot) {
+        exclude(group = "net.kyori")
+    }
+    shade(libs.entitylib.spigot)
+
+    implementation(libs.coroutines.core)
 }
 
 group = "de.crazj"
 version = "1.0-SNAPSHOT"
 description = "SprayZ"
-java.sourceCompatibility = JavaVersion.VERSION_25
-java.targetCompatibility = JavaVersion.VERSION_24
-
-
 
 tasks.processResources {
     filteringCharset = "UTF-8"
@@ -56,18 +67,16 @@ tasks.named<ShadowJar>("shadowJar") {
     relocate("io.github.retrooper", "de.crazj.sprayz.libs.packetevents.spigot")
     relocate("com.github.retrooper", "de.crazj.sprayz.libs.packetevents.api")
     relocate("me.tofaa.entitylib", "de.crazj.sprayz.libs.entitylib")
-//    relocate("net.kyori", "de.crazj.sprayz.libs.kyori")
     relocate("net.axay.kspigot", "de.crazj.sprayz.libs.kspigot")
-//    relocate("com.google.gson", "de.crazj.sprayz.libs.gson")
     relocate("io.ktor", "de.crazj.sprayz.libs.ktor")
 
-    minimize()
+    minimize ()
 
     archiveBaseName.set(rootProject.name)
     archiveClassifier.set("")
     archiveVersion.set(rootProject.version.toString())
 
-    configurations = listOf(project.configurations.getByName("runtimeClasspath"))
+    configurations = listOf(shade)
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
     entryCompression = ZipEntryCompression.STORED
@@ -82,7 +91,6 @@ tasks.register<Copy>("installToTestserver") {
 
     val shadowJarTask = tasks.named<ShadowJar>("shadowJar")
 
-    // WICHTIG: Nutze Provider für Dateien
     from(shadowJarTask.flatMap { it.archiveFile })
     into(layout.projectDirectory.dir("testserver template").dir("plugins"))
 
