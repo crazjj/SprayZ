@@ -12,4 +12,6 @@
  - [x] messages and bugfixing
  - [x] mapItem persistence
  - [x] extensive admin commands
- - [ ] github release
+ - [ ] compatiblity testing/measures for mc versions and software
+ - [ ] clean presentable README
+ - [ ] github release and modrinth + hangar page

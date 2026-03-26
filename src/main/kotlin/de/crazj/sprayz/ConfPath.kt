@@ -23,7 +23,7 @@ enum class ConfPath(
     ),
     DISAPPEAR_AFTER(
         "disappear-after",
-        3,
+        10,
         SPRAY,
         "Time in seconds before a spray disappears. Use -1 to keep sprays forever.",
         longSetting(
@@ -34,7 +34,7 @@ enum class ConfPath(
     ),
     SPRAY_COOLDOWN(
         "cooldown",
-        5,
+        2,
         SPRAY,
         "Time in seconds before a player can place the next spray. Use -1 to disable the cooldown.",
         longSetting(
